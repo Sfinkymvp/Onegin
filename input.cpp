@@ -20,10 +20,6 @@ bool read_file_to_array(char text_lines[][60], size_t y, size_t x, const char* f
         ;
 
     size_t end_index = strlen(text_lines[i - 1]);
-/*    if (text_lines[i - 1][end_index - 1] != '\n') {
-        text_lines[i - 1][end_index] = '\n';
-        text_lines[i - 1][end_index + 1] = '\0';
-    }*/
 
     if (fclose(in) == EOF)
         return false;

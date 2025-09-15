@@ -1,4 +1,6 @@
 test
+out
 args.h
 args.cpp
-*.a
+*.out
+
