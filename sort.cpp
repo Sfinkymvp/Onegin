@@ -38,7 +38,7 @@ int poetic_strcmp(const char* str1, const char* str2)
 }
 
 
-void swap_str(char* str1, char* str2)
+void swap_str_1(char* str1, char* str2)
 {
     assert(str1 != NULL);
     assert(str2 != NULL);
@@ -47,15 +47,49 @@ void swap_str(char* str1, char* str2)
     size_t i = 0;
     assert(strtemp != NULL);
 
-    for (i = 0; str2[i] != '\0'; i++)
-        str1[i] = str2[i];
-    str1[i] = '\0';
+    strcpy(str1, str2);
 
-    for (i = 0; strtemp[i] != '\0'; i++)
-        str2[i] = strtemp[i];
-    str2[i] = '\0';
+    strcpy(str2, strtemp);
 
     free(strtemp);
+}
+
+
+void swap_str_2(char* str1, char* str2)
+{
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
+    for (size_t i = 0; str1[i] != '\0'; i++) {
+        char temp = str1[i];
+
+        str1[i] = str2[i];
+        str2[i] = temp;
+    }
+}
+
+
+void swap_str_3(char* str1, char* str2)
+{
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+    
+    size_t len = strlen(str1);
+    size_t i = 0;
+
+    for (; i <= len; i += sizeof(size_t)) {
+        size_t temp = *(size_t*)(str1 + i);
+
+        *(size_t*)(str1 + i) = *(size_t*)(str2 + i);
+        *(size_t*)(str2 + i) = temp;
+    }
+
+    for (; i <= len; i++) {
+        char temp = str1[i];
+
+        str1[i] = str2[i];
+        str2[i] = temp;
+    }
 }
 
 

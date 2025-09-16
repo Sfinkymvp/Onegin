@@ -20,7 +20,7 @@ ssize_t count_lines_in_file(const char* file_name)
     if (fclose(in) == EOF)
         return -1;
 
-    return count + 1;
+    return count;
 }
 
 
