@@ -2,13 +2,13 @@
 #define _SORT_H_
 
 
-int poetic_strcmp(const char* str1, const char* str2);
+#include "input.h"
 
 
-void swap_str(char* str1, char* str2);
+int poetic_strcmp(const void* strptr1, const void* strptr2);
 
 
-void sort_poetically(char text_lines[][60], size_t y, size_t x);
+void sort_poetically(Strpointer* text, size_t len);
 
 
 #endif

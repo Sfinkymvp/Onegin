@@ -2,7 +2,10 @@
 #define _OUTPUT_H_
 
 
-bool load_lines_to_file(const char text_lines[][60], size_t y, const char* file_name);
+#include "input.h"
+
+
+bool load_text_to_file(const Strpointer* text, size_t len, const char* output_file_name);
 
 
 #endif

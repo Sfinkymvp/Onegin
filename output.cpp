@@ -2,20 +2,22 @@
 #include <assert.h>
 
 #include "output.h"
+#include "input.h"
 
 
-bool load_lines_to_file(const char text_lines[][60], size_t y, const char* file_name)
+bool load_text_to_file(const Strpointer* text, size_t len, const char* output_file_name)
 {
-    assert(text_lines != NULL);
-    assert(file_name != NULL);
+    assert(text != NULL);
+    assert(output_file_name != NULL);
 
-    FILE* out = fopen(file_name, "w");
+    FILE* out = fopen(output_file_name, "w");
 
     if (out == NULL)
         return false;
 
-    for (size_t i = 0; i < y; i++)
-        fputs(text_lines[i], out);
+    for (size_t i = 0; i < len; i++)
+        for (size_t j = 0; j < (size_t)text[i].len; j++)
+            fprintf(out, "%c", text[i].string[j]);
 
     if (fclose(out) == EOF)
         return false;
