@@ -2,24 +2,32 @@
 #define _ARGS_H_
 
 
+/// Названия используемых методов сортировок 
 typedef enum {
-    QSORT = 0,
-    INSERTION_SORT = 1
+    QSORT = 0,                   ///< В среднем O(n log(n)), самая быстрая
+    INSERTION_SORT = 1,          ///< В среднем O(n^2), медленная
+    BUBBLE_SORT = 2              ///< В среднем O(n^2), самая медленная
 } Sorting;
 
 
+/// Значения аргументов, получаемых из командной строки
 typedef struct {
-    const char* input_file;
-    const char* output_file;
-    bool help_mode;
-    bool reverse_sort;
-    Sorting sorting_method;
+    const char* input_file;      ///< Имя файла с исходным текстом
+    const char* output_file;     ///< Имя файла для записи отсортированного текста
+    bool help_mode;              ///< Режим вывода справочной информации
+    bool reverse_sort;           ///< Режим, при котором строки сортируются с конца
+    Sorting sorting_method;      ///< Выбор метода сортировки строк
 } Args;
 
 
+/// Обрабатывает аргументы командной строки
+/// @param args Количество аргументов
+/// @param argv Массив из указателей на аргументы
+/// @return Структура с данными из аргументов командной строки
 Args parse_args(int argc, char** argv);
 
 
+/// Справочная информация о программе
 extern const char* HELP_TEXT;
 
 

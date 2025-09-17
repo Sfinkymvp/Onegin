@@ -64,7 +64,7 @@ size_t initialize_text(Strpointer** text, const char* buffer)
    
     (*text)[0].string = buffer;
 
-    for (size_t i = 0; true; i++) {
+    for (size_t index = 0; true; index++) {
         if (count_elements >= array_len) {
             array_len *= 2;
 
@@ -75,15 +75,15 @@ size_t initialize_text(Strpointer** text, const char* buffer)
 
         Strpointer* last_element = &(*text)[count_elements - 1];
 
-        if (buffer[i] == '\0') {
-            last_element->len = (int)(buffer + i - last_element->string);
+        if (buffer[index] == '\0') {
+            last_element->len = (int)(buffer + index - last_element->string);
             break; 
         }
 
         Strpointer* curr_element = &(*text)[count_elements];
 
-        if (buffer[i] == '\n') {
-            curr_element->string = buffer + i + 1;
+        if (buffer[index] == '\n') {
+            curr_element->string = buffer + index + 1;
             last_element->len = (int)(curr_element->string - last_element->string);
             count_elements++;
         }
@@ -97,4 +97,3 @@ size_t initialize_text(Strpointer** text, const char* buffer)
 
     return array_len;
 }
-

@@ -8,28 +8,28 @@
 #include "input.h"
 
 
-int poetic_strcmp(const void* strptr1, const void* strptr2)
+int poetic_strcmp(const void* str1, const void* str2)
 {
-    assert(strptr1 != NULL);
-    assert(strptr2 != NULL);
+    assert(str1 != NULL);
+    assert(str2 != NULL);
 
-    const Strpointer sptr1 = *(const Strpointer*)strptr1;
-    const Strpointer sptr2 = *(const Strpointer*)strptr2;
-    int len1 = sptr1.len;
-    int len2 = sptr2.len;
+    const Strpointer s1 = *(const Strpointer*)str1;
+    const Strpointer s2 = *(const Strpointer*)str2;
+    int len1 = s1.len;
+    int len2 = s2.len;
 
     for (int index1 = 0, index2 = 0; index1 < len1 && index2 < len2;) {
-        if (!isalpha(sptr1.string[index1])) {
+        if (!isalpha(s1.string[index1])) {
             index1++;
             continue;
         }
-        if (!isalpha(sptr2.string[index2])) {
+        if (!isalpha(s2.string[index2])) {
             index2++;
             continue;
         }
 
-        int symbol1 = tolower(sptr1.string[index1]),
-            symbol2 = tolower(sptr2.string[index2]);
+        int symbol1 = tolower(s1.string[index1]),
+            symbol2 = tolower(s2.string[index2]);
         if (symbol1 != symbol2)
             return symbol1 - symbol2;
 
@@ -41,28 +41,28 @@ int poetic_strcmp(const void* strptr1, const void* strptr2)
 }
 
 
-int poetic_rstrcmp(const void* strptr1, const void* strptr2)
+int poetic_rstrcmp(const void* str1, const void* str2)
 {
-    assert(strptr1 != NULL);
-    assert(strptr2 != NULL);
+    assert(str1 != NULL);
+    assert(str2 != NULL);
 
-    const Strpointer sptr1 = *(const Strpointer*)strptr1;
-    const Strpointer sptr2 = *(const Strpointer*)strptr2;
-    int index1 = sptr1.len - 1;
-    int index2 = sptr2.len - 1;
+    const Strpointer s1 = *(const Strpointer*)str1;
+    const Strpointer s2 = *(const Strpointer*)str2;
+    int index1 = s1.len - 1;
+    int index2 = s2.len - 1;
 
     while (index1 >= 0 && index2 >= 0) {
-        if (!isalpha(sptr1.string[index1])) {
+        if (!isalpha(s1.string[index1])) {
             index1--;
             continue;
         }
-        if (!isalpha(sptr2.string[index2])) {
+        if (!isalpha(s2.string[index2])) {
             index2--;
             continue;
         }
 
-        int symbol1 = tolower(sptr1.string[index1]),
-             symbol2 = tolower(sptr2.string[index2]);
+        int symbol1 = tolower(s1.string[index1]),
+             symbol2 = tolower(s2.string[index2]);
         if (symbol1 != symbol2)
             return symbol1 - symbol2;
 
@@ -130,24 +130,32 @@ void sort_text(Strpointer* text, size_t count, const Args* arguments)
     assert(text != NULL);
     assert(arguments != NULL);
 
+    int (*comparator) (const void*, const void*) = NULL;
+
+    if (arguments->reverse_sort == true)
+        comparator = poetic_rstrcmp;
+    else
+        comparator = poetic_strcmp;
+
+    assert(comparator != NULL);
+
     switch (arguments->sorting_method) {
         case QSORT: {
-            if (arguments->reverse_sort == true)
-                qsort(text, count, sizeof(Strpointer), poetic_rstrcmp);
-            else
-                qsort(text, count, sizeof(Strpointer), poetic_strcmp);
+            qsort(text, count, sizeof(Strpointer), comparator);
             break;
         }
 
         case INSERTION_SORT: {
-            if (arguments->reverse_sort == true)
-                insertion_sort(text, count, poetic_rstrcmp);
-            else
-                insertion_sort(text, count, poetic_strcmp);
+            insertion_sort(text, count, comparator);
             break;
         }
 
-        default: {
+         case BUBBLE_SORT: {
+            bubble_sort(text, count, comparator);
+            break;
+        }
+
+       default: {
             printf("Incorrect sorting argument\n");
         }
     }

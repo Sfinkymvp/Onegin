@@ -40,11 +40,13 @@ Args parse_args(int argc, char** argv)
         }
 
         if (strcmp(argv[index], "--method") == 0 && index < argc - 1) {
-            if (strcmp(argv[++index], "insertion") == 0)
+            index++;
+
+            if (strcmp(argv[index], "insertion") == 0)
                 arguments.sorting_method = INSERTION_SORT;
 
-            if (strcmp(argv[++index], "bubble") == 0)
-                arguments.sorting_method = INSERTION_SORT;
+            if (strcmp(argv[index], "bubble") == 0)
+                arguments.sorting_method = BUBBLE_SORT;
 
             continue;
         }

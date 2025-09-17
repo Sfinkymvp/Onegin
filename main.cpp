@@ -23,16 +23,14 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    char* buffer = NULL;
-    Strpointer* text = NULL;
-
-    buffer = initialize_buffer(arguments.input_file);
+    char* buffer = initialize_buffer(arguments.input_file);
 
     if (buffer == NULL) {
         printf("Error initializing buffer\n");
         return 1;
     }
 
+    Strpointer* text = NULL;
     size_t count = initialize_text(&text, buffer);
    
     if (count == 0) {
