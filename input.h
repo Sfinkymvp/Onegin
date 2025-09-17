@@ -11,10 +11,10 @@ typedef struct {
 } Strpointer;
 
 
-long get_file_size(const char* input_file_name);
+char* initialize_buffer(const char* input_file_name);
 
 
-void initialize_buffer(char** buffer, const char* input_file_name);
+Strpointer* resize_array(Strpointer** text, size_t new_size);
 
 
 size_t initialize_text(Strpointer** text, const char* buffer);

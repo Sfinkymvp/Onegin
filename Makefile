@@ -25,9 +25,9 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 
-osort: $(OBJDIR)/main.o $(OBJDIR)/input.o $(OBJDIR)/output.o $(OBJDIR)/sort.o
+osort: $(OBJDIR)/main.o $(OBJDIR)/input.o $(OBJDIR)/output.o $(OBJDIR)/sort.o $(OBJDIR)/args.o
 	@g++ $(OBJDIR)/main.o $(OBJDIR)/input.o $(OBJDIR)/output.o $(OBJDIR)/sort.o \
-	$(FLAGS) -o osort
+	$(OBJDIR)/args.o $(FLAGS) -o osort
 
 
 $(OBJDIR)/main.o: main.cpp | $(OBJDIR)
@@ -46,8 +46,5 @@ $(OBJDIR)/sort.o: sort.cpp | $(OBJDIR)
 	@g++ -c sort.cpp $(FLAGS) -o $(OBJDIR)/sort.o
 
 
-#$(OBJDIR)/file_stats.o: file_stats.cpp | $(OBJDIR)
-#	@g++ -c file_stats.cpp $(FLAGS) -o $(OBJDIR)/file_stats.o
-
-
-  
+$(OBJDIR)/args.o: args.cpp | $(OBJDIR)
+	@g++ -c args.cpp $(FLAGS) -o $(OBJDIR)/args.o

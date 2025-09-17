@@ -6,47 +6,44 @@
 #include "input.h"
 #include "output.h"
 #include "sort.h"
-
-
+#include "args.h"
 
 
 int main(int argc, char** argv)
 {   
-    char* input_file_name = NULL;
-    char* output_file_name = NULL;
+    Args arguments = parse_args(argc, argv);
 
-    if (argc == 3) {
-        input_file_name = argv[1];
-        output_file_name = argv[2];
-    } else {
-        printf("The number of arguments is incorrect\n");
-        return 1;
+    if (arguments.help_mode == true) {
+        printf("%s", HELP_TEXT);
+        return 0;
     }
 
-    assert(input_file_name != NULL);
-    assert(output_file_name != NULL);
+    if (arguments.input_file == NULL || arguments.output_file == NULL) {
+        printf("You forgot to enter the required arguments, see --help\n");
+        return 1;
+    }
 
     char* buffer = NULL;
     Strpointer* text = NULL;
 
-    initialize_buffer(&buffer, input_file_name);
+    buffer = initialize_buffer(arguments.input_file);
 
     if (buffer == NULL) {
         printf("Error initializing buffer\n");
         return 1;
     }
 
-    size_t len = initialize_text(&text, buffer);
-    
-    if (len == 0) {
+    size_t count = initialize_text(&text, buffer);
+   
+    if (count == 0) {
         printf("Error initializing text\n");
         return 1;
     }
 
-    sort_poetically(text, len);
+    sort_text(text, count, &arguments);
 
-    if (!load_text_to_file(text, len, output_file_name))
-        printf("Error writing to file\n");
+    if (!load_text_to_file(text, count, arguments.output_file))
+       printf("Error writing to file\n");
 
     assert(buffer != NULL);
     assert(text != NULL);

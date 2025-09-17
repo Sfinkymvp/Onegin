@@ -1,6 +1,6 @@
-test
+small_test
+big_test
 out
-args.h
-args.cpp
 *.out
-
+obj/
+*.o
