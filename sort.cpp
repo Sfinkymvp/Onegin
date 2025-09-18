@@ -6,6 +6,7 @@
 
 #include "sort.h"
 #include "input.h"
+#include "args.h"
 
 
 int letter_strcmp(const void* str1, const void* str2)
@@ -125,23 +126,22 @@ void bubble_sort(Strpointer* ptr, size_t count, int (*comp) (const void*, const 
 }
 
 
-void sort_text(Strpointer* text, size_t count, const Args* arguments)
+void sort_text(Strpointer* text, size_t count, Sorting sorting_method, bool reverse_mode)
 {
     assert(text != NULL);
-    assert(arguments != NULL);
 
     int (*comparator) (const void*, const void*) = NULL;
 
-    if (arguments->reverse_sort == true)
+    if (reverse_mode == true)
         comparator = letter_rstrcmp;
     else
         comparator = letter_strcmp;
 
     assert(comparator != NULL);
 
-    switch (arguments->sorting_method) {
+    switch (sorting_method) {
         case QSORT: {
-            qsort(text, count, sizeof(Strpointer), comparator);
+            qsort(text, count, sizeof(*text), comparator);
             break;
         }
 

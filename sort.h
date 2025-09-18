@@ -44,7 +44,7 @@ void bubble_sort(Strpointer* ptr, size_t count, int (*comp) (const void*, const 
 /// @param text Массив со структурами
 /// @param count Количество элементов массива
 /// @param arguments Указатель на структуру, содержащую название метода сравнения строк
-void sort_text(Strpointer* text, size_t count, const Args* arguments);
+void sort_text(Strpointer* text, size_t count, Sorting sorting_method, bool reverse_mode);
 
 
 #endif

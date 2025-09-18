@@ -1,16 +1,10 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
-
-/// Начальный размер для создания динамического массива
-const int START_SIZE = 32;
+#include "args.h"
 
 
-/// Удобный способ хранения указателя на строку из буфера и длины этой строки
-typedef struct {
-    const char* string;     ///< Указатель на строку из буфера
-    int len;                ///< Длина строки
-} Strpointer;
+size_t get_file_size(const char* input_file_name);
 
 
 /// Создание динамического массива, содержащего текст из файла

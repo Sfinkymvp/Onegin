@@ -11,21 +11,35 @@ typedef enum {
 } Sorting;
 
 
-/// Значения аргументов, получаемых из командной строки
+/// Удобный способ хранения указателя на строку из буфера и длины этой строки
+typedef struct {
+    const char* string;     ///< Указатель на строку из буфера
+    int len;                ///< Длина строки
+} Strpointer;
+
+
 typedef struct {
     const char* input_file;      ///< Имя файла с исходным текстом
     const char* output_file;     ///< Имя файла для записи отсортированного текста
-    bool help_mode;              ///< Режим вывода справочной информации
-    bool reverse_sort;           ///< Режим, при котором строки сортируются с конца
-    Sorting sorting_method;      ///< Выбор метода сортировки строк
-} Args;
+    char* buffer;
+    Strpointer* text;
+    size_t string_count;
+} Sorting_information;
+
+
+typedef struct {
+    Sorting_information* array;
+    size_t size;
+    Sorting sorting_method;
+    bool help_mode;
+} Data;
 
 
 /// Обрабатывает аргументы командной строки
 /// @param argc Количество аргументов
 /// @param argv Массив из указателей на аргументы
 /// @return Структура с данными из аргументов командной строки
-Args parse_args(int argc, char** argv);
+Data get_data(int argc, char** argv);
 
 
 /// Справочная информация о программе

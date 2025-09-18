@@ -2,26 +2,39 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <sys/stat.h>
 
 #include "input.h"
+
+
+size_t get_file_size(const char* input_file_name)
+{
+    assert(input_file_name != NULL);
+
+    struct stat buf = {};
+
+    if (stat(input_file_name, &buf) == -1)
+        return 0;
+
+    return (size_t)buf.st_size;
+}
 
 
 char* initialize_buffer(const char* input_file_name)
 {
     assert(input_file_name != NULL);
 
-    char* buffer = NULL;
     FILE* in = fopen(input_file_name, "r");
 
     if (in == NULL) {
         return NULL;
     }
 
-    fseek(in, 0, SEEK_END);
-    size_t size = (size_t)ftell(in) + 1;
-    fseek(in, 0, SEEK_SET);
+    size_t size = get_file_size(input_file_name) + 1;
+    if (size == 0)
+        return NULL;
 
-    buffer = (char*)calloc(size, 1);
+    char* buffer  = (char*)calloc(size, 1);
     
     if (buffer == NULL)
         return NULL;
@@ -35,19 +48,6 @@ char* initialize_buffer(const char* input_file_name)
     }
 
     return buffer;
-}
-
-
-Strpointer* resize_array(Strpointer** text, size_t new_size)
-{
-    Strpointer* temp = (Strpointer*)realloc(*text, new_size * sizeof(Strpointer));
-
-    if (temp == NULL) {
-        free(*text);
-        *text = NULL;
-    }
-
-    return temp;
 }
 
 

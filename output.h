@@ -10,7 +10,10 @@
 /// @param count Количество строк
 /// @param output_file_name Имя файла, в который производится запись
 /// @return true - строки записаны; false - произошла ошибка
-bool load_text_to_file(const Strpointer* text, size_t count, const char* output_file_name);
+bool load_text_to_file(const Strpointer* text, size_t count, const char* output_file_name, const char* mode);
+
+
+bool store_buffer_to_file(const char* buffer, const char* output_file_name, const char* mode);
 
 
 #endif
