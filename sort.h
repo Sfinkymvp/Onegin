@@ -10,14 +10,14 @@
 /// @param strptr1 Первая строка
 /// @param strptr2 Вторая строка
 /// @return >0 - str1 > str2, 0 - str1 = str2, <0 - str1 < str2
-int poetic_strcmp(const void* str1, const void* str2);
+int letter_strcmp(const void* str1, const void* str2);
 
 
 /// Сравнение строк с их конца без учета спец. символов и регистра
 /// @param str1 Первая строка
 /// @param str2 Вторая строка
 /// @return >0 - str1 > str2, 0 - str1 = str2, <0 - str1 < str2
-int poetic_rstrcmp(const void* str1, const void* str2);
+int letter_rstrcmp(const void* str1, const void* str2);
 
 
 /// Сортировка вставками, средняя сложность O(n^2), быстрее bubble_sort

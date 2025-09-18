@@ -8,7 +8,7 @@
 #include "input.h"
 
 
-int poetic_strcmp(const void* str1, const void* str2)
+int letter_strcmp(const void* str1, const void* str2)
 {
     assert(str1 != NULL);
     assert(str2 != NULL);
@@ -41,7 +41,7 @@ int poetic_strcmp(const void* str1, const void* str2)
 }
 
 
-int poetic_rstrcmp(const void* str1, const void* str2)
+int letter_rstrcmp(const void* str1, const void* str2)
 {
     assert(str1 != NULL);
     assert(str2 != NULL);
@@ -133,9 +133,9 @@ void sort_text(Strpointer* text, size_t count, const Args* arguments)
     int (*comparator) (const void*, const void*) = NULL;
 
     if (arguments->reverse_sort == true)
-        comparator = poetic_rstrcmp;
+        comparator = letter_rstrcmp;
     else
-        comparator = poetic_strcmp;
+        comparator = letter_strcmp;
 
     assert(comparator != NULL);
 
