@@ -2,7 +2,7 @@ small_test
 big_test
 out
 *.out
-obj/
+obj
 *.o
 html
 latex
