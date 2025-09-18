@@ -26,6 +26,12 @@ char* initialize_buffer(const char* input_file_name);
 Strpointer* resize_array(Strpointer** text, size_t new_size);
 
 
+/// Получение количества строк в буфере
+/// @param buffer Массив, содержащий текст из файла
+/// @return Количество строк
+size_t get_string_count(const char* buffer);
+
+
 /// Создание динамического массива, содержащего указатели на строки из буфера
 /// @param text Указатель на массив структур (двойной указатель)
 /// @param buffer Массив, содержащий текст из файла

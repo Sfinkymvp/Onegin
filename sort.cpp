@@ -150,13 +150,15 @@ void sort_text(Strpointer* text, size_t count, const Args* arguments)
             break;
         }
 
-         case BUBBLE_SORT: {
+        case BUBBLE_SORT: {
             bubble_sort(text, count, comparator);
             break;
         }
 
-       default: {
+        case NO_SORT:
+            break;
+
+        default:
             printf("Incorrect sorting argument\n");
-        }
     }
 }

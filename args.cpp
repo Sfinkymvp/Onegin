@@ -14,6 +14,7 @@ const char* HELP_TEXT =
     "  -o <output_file>   Entering the output file name\n"
     "  --help             Show this help message\n"
     "  --method <name>    Selecting a custom sorting method ('insertion', 'bubble')\n"
+    "                     Another name disables the sorting function\n"
     "  --reverse          Sort strings from the end\n";
 
 
@@ -44,9 +45,10 @@ Args parse_args(int argc, char** argv)
 
             if (strcmp(argv[index], "insertion") == 0)
                 arguments.sorting_method = INSERTION_SORT;
-
-            if (strcmp(argv[index], "bubble") == 0)
+            else if (strcmp(argv[index], "bubble") == 0)
                 arguments.sorting_method = BUBBLE_SORT;
+            else
+                arguments.sorting_method = NO_SORT;
 
             continue;
         }

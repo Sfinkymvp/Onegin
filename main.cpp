@@ -31,20 +31,20 @@ int main(int argc, char** argv)
     }
 
     Strpointer* text = NULL;
-    size_t count = initialize_text(&text, buffer);
+    size_t string_count = initialize_text(&text, buffer);
    
-    if (count == 0) {
+    if (string_count == 0) {
         printf("Error initializing text\n");
         return 1;
     }
 
-    sort_text(text, count, &arguments);
+    sort_text(text, string_count, &arguments);
 
-    if (!load_text_to_file(text, count, arguments.output_file))
-       printf("Error writing to file\n");
-
-    assert(buffer != NULL);
     assert(text != NULL);
+    assert(buffer != NULL);
+
+    if (!load_text_to_file(text, string_count, arguments.output_file))
+       printf("Error writing to file\n");
 
     free(buffer);
     free(text);

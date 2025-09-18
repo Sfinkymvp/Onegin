@@ -7,8 +7,8 @@
 
 
 /// Сравнение строк с их начала без учета спец. символов и регистра
-/// @param strptr1 Первая строка
-/// @param strptr2 Вторая строка
+/// @param str1 Первая строка
+/// @param str2 Вторая строка
 /// @return >0 - str1 > str2, 0 - str1 = str2, <0 - str1 < str2
 int letter_strcmp(const void* str1, const void* str2);
 

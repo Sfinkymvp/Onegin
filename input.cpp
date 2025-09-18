@@ -44,9 +44,24 @@ Strpointer* resize_array(Strpointer** text, size_t new_size)
 
     if (temp == NULL) {
         free(*text);
+        *text = NULL;
     }
 
     return temp;
+}
+
+
+size_t get_string_count(const char* buffer)
+{
+    assert(buffer != NULL);
+
+    size_t count = 0;
+
+    for (size_t index = 0; buffer[index] != '\0'; index++)
+        if (buffer[index] == '\n')
+            count++;
+
+    return count + 1;
 }
 
 
@@ -55,45 +70,31 @@ size_t initialize_text(Strpointer** text, const char* buffer)
     assert(text != NULL);
     assert(buffer != NULL);
 
-    size_t array_len = START_SIZE;
-    size_t count_elements = 1;
+    size_t array_len = get_string_count(buffer);
+    size_t number_element = 0;
     *text = (Strpointer*)calloc(array_len, sizeof(Strpointer));
 
     if (*text == NULL)
         return 0;
    
-    (*text)[0].string = buffer;
+    (*text)[number_element++].string = buffer;
 
     for (size_t index = 0; true; index++) {
-        if (count_elements >= array_len) {
-            array_len *= 2;
-
-            *text = resize_array(text, array_len);
-            if (*text == NULL)
-                return 0;
-        }
-
-        Strpointer* last_element = &(*text)[count_elements - 1];
+        Strpointer* last_element = &(*text)[number_element - 1];
 
         if (buffer[index] == '\0') {
             last_element->len = (int)(buffer + index - last_element->string);
             break; 
         }
 
-        Strpointer* curr_element = &(*text)[count_elements];
+        Strpointer* curr_element = &(*text)[number_element];
 
         if (buffer[index] == '\n') {
             curr_element->string = buffer + index + 1;
             last_element->len = (int)(curr_element->string - last_element->string);
-            count_elements++;
+            number_element++;
         }
     }
-
-    array_len = count_elements; 
-
-    *text = resize_array(text, array_len);
-    if (*text == NULL)
-        return 0;
 
     return array_len;
 }
