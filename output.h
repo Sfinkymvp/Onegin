@@ -6,14 +6,20 @@
 
 
 /// Записывает строки в файл
-/// @param text Массив со структурами, содержащими данные о строках
+/// @param lines Массив со структурами, содержащими данные о строках
 /// @param count Количество строк
-/// @param output_file_name Имя файла, в который производится запись
+/// @param output_filename Имя файла, в который производится запись
+/// @param mode Режим открытия файла
 /// @return true - строки записаны; false - произошла ошибка
-bool load_text_to_file(const Strpointer* text, size_t count, const char* output_file_name, const char* mode);
+bool load_lines_to_file(const Line* lines, size_t count, const char* output_filename, const char* mode);
 
 
-bool store_buffer_to_file(const char* buffer, const char* output_file_name, const char* mode);
+/// Записывает буфер в файл
+/// @param buffer Буфер
+/// @param output_filename Имя файла, в который производится записа
+/// @param mode Режим открытия файла
+/// @return true - буфер записан; false - произошла ошибка
+bool store_buffer_to_file(const char* buffer, const char* output_filename, const char* mode);
 
 
 #endif

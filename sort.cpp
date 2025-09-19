@@ -14,23 +14,21 @@ int letter_strcmp(const void* str1, const void* str2)
     assert(str1 != NULL);
     assert(str2 != NULL);
 
-    const Strpointer s1 = *(const Strpointer*)str1;
-    const Strpointer s2 = *(const Strpointer*)str2;
-    int len1 = s1.len;
-    int len2 = s2.len;
+    const Line s1 = *(const Line*)str1;
+    const Line s2 = *(const Line*)str2;
 
-    for (int index1 = 0, index2 = 0; index1 < len1 && index2 < len2;) {
-        if (!isalpha(s1.string[index1])) {
+    for (int index1 = 0, index2 = 0; index1 < s1.length && index2 < s2.length;) {
+        if (!isalpha(s1.data[index1])) {
             index1++;
             continue;
         }
-        if (!isalpha(s2.string[index2])) {
+        if (!isalpha(s2.data[index2])) {
             index2++;
             continue;
         }
 
-        int symbol1 = tolower(s1.string[index1]),
-            symbol2 = tolower(s2.string[index2]);
+        int symbol1 = tolower(s1.data[index1]),
+            symbol2 = tolower(s2.data[index2]);
         if (symbol1 != symbol2)
             return symbol1 - symbol2;
 
@@ -47,23 +45,23 @@ int letter_rstrcmp(const void* str1, const void* str2)
     assert(str1 != NULL);
     assert(str2 != NULL);
 
-    const Strpointer s1 = *(const Strpointer*)str1;
-    const Strpointer s2 = *(const Strpointer*)str2;
-    int index1 = s1.len - 1;
-    int index2 = s2.len - 1;
+    const Line s1 = *(const Line*)str1;
+    const Line s2 = *(const Line*)str2;
+    int index1 = s1.length - 1;
+    int index2 = s2.length - 1;
 
     while (index1 >= 0 && index2 >= 0) {
-        if (!isalpha(s1.string[index1])) {
+        if (!isalpha(s1.data[index1])) {
             index1--;
             continue;
         }
-        if (!isalpha(s2.string[index2])) {
+        if (!isalpha(s2.data[index2])) {
             index2--;
             continue;
         }
 
-        int symbol1 = tolower(s1.string[index1]),
-             symbol2 = tolower(s2.string[index2]);
+        int symbol1 = tolower(s1.data[index1]),
+             symbol2 = tolower(s2.data[index2]);
         if (symbol1 != symbol2)
             return symbol1 - symbol2;
 
@@ -75,48 +73,48 @@ int letter_rstrcmp(const void* str1, const void* str2)
 }
 
 
-void insertion_sort(Strpointer* ptr, size_t count, int (*comp) (const void*, const void*))
+void insertion_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*))
 {
-    assert(ptr != NULL);
-    assert(comp != NULL);
+    assert(lines != NULL);
+    assert(comparator != NULL);
 
     for (size_t index = 1; index < count; index++) {
         size_t curr_index = index;
 
-        const Strpointer curr_el = ptr[curr_index];
+        const Line curr_el = lines[curr_index];
 
-        while (curr_index > 0 && comp(&ptr[curr_index - 1], &curr_el) > 0) {
-            ptr[curr_index] = ptr[curr_index - 1];
+        while (curr_index > 0 && comparator(&lines[curr_index - 1], &curr_el) > 0) {
+            lines[curr_index] = lines[curr_index - 1];
             curr_index--;
         }
 
-        ptr[curr_index] = curr_el;
+        lines[curr_index] = curr_el;
     }
 }
 
 
-void swap(Strpointer* ptr1, Strpointer* ptr2)
+void swap(Line* line1, Line* line2)
 {
-    assert(ptr1 != NULL);
-    assert(ptr2 != NULL);
+    assert(line1 != NULL);
+    assert(line2 != NULL);
 
-    Strpointer temp = *ptr1;
-    *ptr1 = *ptr2;
-    *ptr2 = temp;
+    Line temp = *line1;
+    *line1 = *line2;
+    *line2 = temp;
 }
 
 
-void bubble_sort(Strpointer* ptr, size_t count, int (*comp) (const void*, const void*))
+void bubble_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*))
 {
-    assert(ptr != NULL);
-    assert(comp != NULL);
+    assert(lines != NULL);
+    assert(comparator != NULL);
 
     for (size_t step = count - 1; step > 0; step--) {
         size_t swap_count = 0;
 
         for (size_t index = 0; index < step; index++)
-            if (comp(ptr + index, ptr + index + 1) > 0) {
-                swap(ptr + index, ptr + index + 1);
+            if (comparator(lines + index, lines + index + 1) > 0) {
+                swap(lines + index, lines + index + 1);
                 swap_count++;
             }
 
@@ -126,9 +124,9 @@ void bubble_sort(Strpointer* ptr, size_t count, int (*comp) (const void*, const 
 }
 
 
-void sort_text(Strpointer* text, size_t count, Sorting sorting_method, bool reverse_mode)
+void sort_lines(Line* lines, size_t count, Sort_method method, bool reverse_mode)
 {
-    assert(text != NULL);
+    assert(lines != NULL);
 
     int (*comparator) (const void*, const void*) = NULL;
 
@@ -139,23 +137,23 @@ void sort_text(Strpointer* text, size_t count, Sorting sorting_method, bool reve
 
     assert(comparator != NULL);
 
-    switch (sorting_method) {
-        case QSORT: {
-            qsort(text, count, sizeof(*text), comparator);
+    switch (method) {
+        case SORT_QSORT: {
+            qsort(lines, count, sizeof(*lines), comparator);
             break;
         }
 
-        case INSERTION_SORT: {
-            insertion_sort(text, count, comparator);
+        case SORT_INSERTION: {
+            insertion_sort(lines, count, comparator);
             break;
         }
 
-        case BUBBLE_SORT: {
-            bubble_sort(text, count, comparator);
+        case SORT_BUBBLE: {
+            bubble_sort(lines, count, comparator);
             break;
         }
 
-        case NO_SORT:
+        case SORT_NONE:
             break;
 
         default:

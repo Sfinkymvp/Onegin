@@ -7,30 +7,30 @@
 #include "input.h"
 
 
-size_t get_file_size(const char* input_file_name)
+size_t get_file_size(const char* input_filename)
 {
-    assert(input_file_name != NULL);
+    assert(input_filename != NULL);
 
     struct stat buf = {};
 
-    if (stat(input_file_name, &buf) == -1)
+    if (stat(input_filename, &buf) == -1)
         return 0;
 
     return (size_t)buf.st_size;
 }
 
 
-char* initialize_buffer(const char* input_file_name)
+char* initialize_buffer(const char* input_filename)
 {
-    assert(input_file_name != NULL);
+    assert(input_filename != NULL);
 
-    FILE* in = fopen(input_file_name, "r");
+    FILE* in = fopen(input_filename, "r");
 
     if (in == NULL) {
         return NULL;
     }
 
-    size_t size = get_file_size(input_file_name) + 1;
+    size_t size = get_file_size(input_filename) + 1;
     if (size == 0)
         return NULL;
 
@@ -51,7 +51,7 @@ char* initialize_buffer(const char* input_file_name)
 }
 
 
-size_t get_string_count(const char* buffer)
+size_t get_line_count(const char* buffer)
 {
     assert(buffer != NULL);
 
@@ -65,36 +65,36 @@ size_t get_string_count(const char* buffer)
 }
 
 
-size_t initialize_text(Strpointer** text, const char* buffer)
+size_t initialize_lines(Line** lines, const char* buffer)
 {
-    assert(text != NULL);
+    assert(lines != NULL);
     assert(buffer != NULL);
 
-    size_t array_len = get_string_count(buffer);
+    size_t line_count = get_line_count(buffer);
     size_t number_element = 0;
-    *text = (Strpointer*)calloc(array_len, sizeof(Strpointer));
+    *lines = (Line*)calloc(line_count, sizeof(Line));
 
-    if (*text == NULL)
+    if (*lines == NULL)
         return 0;
    
-    (*text)[number_element++].string = buffer;
+    (*lines)[number_element++].data = buffer;
 
     for (size_t index = 0; true; index++) {
-        Strpointer* last_element = &(*text)[number_element - 1];
+        Line* last_element = &(*lines)[number_element - 1];
 
         if (buffer[index] == '\0') {
-            last_element->len = (int)(buffer + index - last_element->string);
+            last_element->length = (int)(buffer + index - last_element->data);
             break; 
         }
 
-        Strpointer* curr_element = &(*text)[number_element];
+        Line* curr_element = &(*lines)[number_element];
 
         if (buffer[index] == '\n') {
-            curr_element->string = buffer + index + 1;
-            last_element->len = (int)(curr_element->string - last_element->string);
+            curr_element->data = buffer + index + 1;
+            last_element->length = (int)(curr_element->data - last_element->data);
             number_element++;
         }
     }
 
-    return array_len;
+    return line_count;
 }

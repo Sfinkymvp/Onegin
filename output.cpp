@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <assert.h>
 
@@ -5,20 +6,20 @@
 #include "input.h"
 
 
-bool load_text_to_file(const Strpointer* text, size_t count, const char* output_file_name, const char* mode)
+bool load_lines_to_file(const Line* lines, size_t count, const char* output_filename, const char* mode)
 {
-    assert(text != NULL);
-    assert(output_file_name != NULL);
+    assert(lines != NULL);
+    assert(output_filename != NULL);
     assert(mode != NULL);
 
-    FILE* out = fopen(output_file_name, mode);
+    FILE* out = fopen(output_filename, mode);
 
     if (out == NULL)
         return false;
 
-    for (size_t arr_index = 0; arr_index < count; arr_index++)
-        for (size_t str_index = 0; str_index < (size_t)text[arr_index].len; str_index++) 
-            fprintf(out, "%c", text[arr_index].string[str_index]);
+    for (size_t lines_index = 0; lines_index < count; lines_index++)
+        for (size_t index = 0; index < (size_t)lines[lines_index].length; index++) 
+            fprintf(out, "%c", lines[lines_index].data[index]);
     fprintf(out, "\n");
 
     if (fclose(out) == EOF)
@@ -28,18 +29,18 @@ bool load_text_to_file(const Strpointer* text, size_t count, const char* output_
 }
 
 
-bool store_buffer_to_file(const char* buffer, const char* output_file_name, const char* mode)
+bool store_buffer_to_file(const char* buffer, const char* output_filename, const char* mode)
 {
     assert(buffer != NULL);
-    assert(output_file_name != NULL);
+    assert(output_filename != NULL);
     assert(mode != NULL);
 
-    FILE* out = fopen(output_file_name, mode);
+    FILE* out = fopen(output_filename, mode);
 
     if (out == NULL)
         return false;
 
-    fprintf(out, "%s\n", buffer);
+    fprintf(out, "%s", buffer);
 
     if (fclose(out) == EOF)
         return false;

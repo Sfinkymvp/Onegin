@@ -9,69 +9,37 @@
 #include "args.h"
 
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {   
     assert(argv != NULL);
 
-    Data data = get_data(argc, argv);
+    Args args = get_args(argc, argv);
 
-    if (data.help_mode == true) {
-        printf("%s", HELP_TEXT);
+    if (args.show_help == true) {
+        printf("%s", HELP_MESSAGE);
         return 0;
     }
 
-    if (data.array == NULL || data.size == 0) {
+    if (args.process_count == 0) {
+        assert(args.processes != NULL);
+
         printf("Error processing arguments\n");
         return 1;
     }
 
-    assert(data.array != NULL);
-    assert(data.size != 0);
-
-    for (size_t index = 0; index < data.size; index++) {
-        assert(data.array[index].input_file != NULL &&
-               data.array[index].output_file != NULL);
-
-        data.array[index].buffer = initialize_buffer(data.array[index].input_file);
-
-        if (data.array[index].buffer == NULL) {
-            printf("Error initializing buffer\n");
+    assert(args.processes != NULL);
+    assert(args.process_count != 0);
+   
+    for (size_t index = 0; index < args.process_count; index++)
+        if (!process_file(&args.processes[index], args.method))
             break;
-        }
 
-        data.array[index].string_count = initialize_text(&data.array[index].text,
-                                                          data.array[index].buffer);
-       
-        if (data.array[index].string_count == 0) {
-            printf("Error initializing text\n");
-            break;
-        }
-
-        assert(data.array[index].text != NULL);
-
-        sort_text(data.array[index].text, data.array[index].string_count, data.sorting_method, false);
-        if (!load_text_to_file(data.array[index].text,
-             data.array[index].string_count,
-             data.array[index].output_file, "w")) {
-           printf("Error writing to file\n");
-           break;
-        }
-
-        sort_text(data.array[index].text, data.array[index].string_count, data.sorting_method, true);
-        load_text_to_file(data.array[index].text,
-                          data.array[index].string_count,
-                          data.array[index].output_file, "a");
-
-        store_buffer_to_file(data.array[index].buffer, data.array[index].output_file, "a");
+    for (size_t index = 0; index < args.process_count; index++) {
+        free(args.processes[index].buffer);
+        free(args.processes[index].lines);
     }
-     
-    for (size_t index = 0; index < data.size; index++) {
-        free(data.array[index].buffer);
-        free(data.array[index].text);
-    }
-    free(data.array);
 
-    printf("Exit\n");
-    
+    free(args.processes);
+
     return 0;
 }
