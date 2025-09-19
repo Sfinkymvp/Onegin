@@ -121,7 +121,6 @@ bool process_file(File_process* process, Sort_method method)
     process->buffer = initialize_buffer(process->input_filename);
 
     if (process->buffer == NULL) {
-        printf("Error initializing buffer\n");
         return false;
     }
 
@@ -129,7 +128,6 @@ bool process_file(File_process* process, Sort_method method)
                                             process->buffer);
    
     if (process->line_count == 0) {
-        printf("Error initializing lines\n");
         return false;
     }
 
@@ -139,7 +137,6 @@ bool process_file(File_process* process, Sort_method method)
     if (!load_lines_to_file(process->lines,
                             process->line_count,
                             process->output_filename, "w")) {
-       printf("Error writing to file\n");
        return false;
     }
 

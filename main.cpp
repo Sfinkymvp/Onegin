@@ -31,8 +31,13 @@ int main(int argc, const char** argv)
     assert(args.process_count != 0);
    
     for (size_t index = 0; index < args.process_count; index++)
-        if (!process_file(&args.processes[index], args.method))
+        if (!process_file(&args.processes[index], args.method)) {
+            printf("Error while processing data\n"
+                   "Input file name:  %s\nOutput file name: %s\n",
+                   args.processes[index].input_filename,
+                   args.processes[index].output_filename);
             break;
+        }
 
     for (size_t index = 0; index < args.process_count; index++) {
         free(args.processes[index].buffer);
