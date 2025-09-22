@@ -16,10 +16,11 @@ bool load_lines_to_file(const Line* lines, size_t count, const char* output_file
 
 /// Записывает буфер в файл
 /// @param buffer Буфер
+/// @param size Размер буфера
 /// @param output_filename Имя файла, в который производится записа
 /// @param mode Режим открытия файла
 /// @return true - буфер записан; false - произошла ошибка
-bool store_buffer_to_file(const char* buffer, const char* output_filename, const char* mode);
+bool store_buffer_to_file(const char* buffer, size_t size, const char* output_filename, const char* mode);
 
 
 #endif

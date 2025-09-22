@@ -20,12 +20,27 @@ size_t get_file_size(const char* input_filename)
 }
 
 
+size_t str_replace_char(char* string, char old_char, char new_char)
+{
+    assert(string != NULL);
+
+    size_t count = 0;
+
+    for (; *string != '\0'; string++)
+        if (*string == old_char) {
+            *string = new_char;
+            count++;
+        }
+
+    return count;
+}
+
+
 char* initialize_buffer(const char* input_filename)
 {
     assert(input_filename != NULL);
 
     FILE* in = fopen(input_filename, "r");
-
     if (in == NULL) {
         return NULL;
     }
@@ -35,7 +50,6 @@ char* initialize_buffer(const char* input_filename)
         return NULL;
 
     char* buffer  = (char*)calloc(size, 1);
-    
     if (buffer == NULL)
         return NULL;
 
@@ -70,6 +84,7 @@ size_t initialize_lines(Line** lines, const char* buffer)
     assert(lines != NULL);
     assert(buffer != NULL);
 
+    size_t index = 0;
     size_t line_count = get_line_count(buffer);
     size_t number_element = 0;
     *lines = (Line*)calloc(line_count, sizeof(Line));
@@ -79,14 +94,8 @@ size_t initialize_lines(Line** lines, const char* buffer)
    
     (*lines)[number_element++].data = buffer;
 
-    for (size_t index = 0; true; index++) {
+    for (; buffer[index] != '\0'; index++) {
         Line* last_element = &(*lines)[number_element - 1];
-
-        if (buffer[index] == '\0') {
-            last_element->length = (int)(buffer + index - last_element->data);
-            break; 
-        }
-
         Line* curr_element = &(*lines)[number_element];
 
         if (buffer[index] == '\n') {
@@ -95,6 +104,8 @@ size_t initialize_lines(Line** lines, const char* buffer)
             number_element++;
         }
     }
+
+    (*lines)[number_element - 1].length = (int)(buffer + index - (*lines)[number_element - 1].data);
 
     return line_count;
 }

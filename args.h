@@ -18,11 +18,18 @@ typedef struct {
 } Line;
 
 
-/// Информация для обработки одного входного/выходного файла
+/// Имена файлов
 typedef struct {
     const char* input_filename;      ///< Имя файла с исходным текстом
     const char* output_filename;     ///< Имя файла для записи отсортированного текста
+} File_name;
+
+
+/// Информация для обработки одного входного/выходного файла
+typedef struct {
+    File_name names;                 ///< Имена файлов
     char* buffer;                    ///< Буфер с содержимым файла
+    size_t buffer_size;              ///< Длина буфера
     Line* lines;                     ///< Массив строк
     size_t line_count;               ///< Количество строк
 } File_process;
@@ -47,6 +54,42 @@ Args initialize_args(int argc);
 /// @param args Структура для аргументов
 /// @param argv Аргументы командной строки
 void parse_args(Args* args, const char**argv);
+
+
+/// Проверка корректности пользовательского ввода аргументов
+/// @param args Обработанные аргументы
+/// @param input_files_count Количество входных файлов
+/// @param output_files_count Количество выходных файлов
+bool is_args_correct(Args* args, size_t input_files_count, size_t output_files_count);
+
+
+/// Парсинг входного файла
+/// @param args Обработанные аргументы
+/// @param argv Массив аргументов командной строки
+/// @param index Номер аргумента
+/// @param count_el Количество аргументов
+/// @param input_files_count Количество входных файлов
+/// @param output_files_count Количество выходных файлов
+void parse_input_file(Args* args, const char** argv, size_t* index, size_t* count_el,
+                      size_t* input_files_count, size_t* output_files_count);
+
+
+/// Парсинг выходного файла
+/// @param args Обработанные аргументы
+/// @param argv Массив аргументов командной строки
+/// @param index Номер аргумента
+/// @param count_el Количество аргументов
+/// @param input_files_count Количество входных файлов
+/// @param output_files_count Количество выходных файлов
+void parse_output_file(Args* args, const char** argv, size_t* index, size_t* count_el,
+                      size_t* input_files_count, size_t* output_files_count);
+
+
+/// Парсинг метода сортировки
+/// @param args Обработанные аргументы
+/// @param argv Массив аргументов командной строки
+/// @param index Номер аргумента
+void parse_method(Args* args, const char** argv, size_t* index);
 
 
 /// Обрабатывает аргументы командной строки

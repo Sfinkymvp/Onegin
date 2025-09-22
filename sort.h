@@ -20,32 +20,42 @@ int letter_strcmp(const void* str1, const void* str2);
 int letter_rstrcmp(const void* str1, const void* str2);
 
 
+/// Копирует второй объект в первый
+/// @param ptr1 Первый объект
+/// @param ptr2 Второй объект
+/// @param size Размер объекта
+void copy(void* ptr1, void* ptr2, size_t size);
+
+
+/// Меняет два объекта местами
+/// @param ptr1 Первый объект
+/// @param ptr2 Второй объект
+/// @param size Размер объекта
+void swap(void* ptr1, void* ptr2, size_t size);
+
+
 /// Сортировка вставками, средняя сложность O(n^2), быстрее bubble_sort
-/// @param lines Массив со структурами
-/// @param count Количество элементов массива
+/// @param ptr Массив
+/// @param count Количество элементов
+/// @param size Размер элемента
 /// @param comparator Используемый компаратор (метод сравнения строк)
-void insertion_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*));
-
-
-/// Меняет две структуры местами
-/// @param line1 1 структура
-/// @param line2 2 структура
-void swap(Line* line1, Line* line2);
+void insertion_sort(void* ptr, size_t count, size_t size, int (*comparator) (const void*, const void*));
 
 
 /// Сортировка пузырьком, средняя сложность O(n^2), самая медленная
-/// @param lines Массив со структурами
-/// @param count Количество элементов массива
+/// @param ptr Массив
+/// @param count Количество элементов
+/// @param size Размер элемента
 /// @param comparator Используемый компаратор (метод сравнения строк)
-void bubble_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*));
+void bubble_sort(void* ptr, size_t count, size_t size, int (*comparator) (const void*, const void*));
 
 
 /// Выбор метода сортировки, метода сравнения строк
 /// @param lines Массив со структурами
 /// @param count Количество элементов массива
 /// @param method Метод сортировки
-/// @param reverse_mode true - сортировка с конца строки; false - с начала
-void sort_lines(Line* lines, size_t count, Sort_method method, bool reverse_mode);
+/// @param comparator Метод сравнения строк
+void sort_lines(Line* lines, size_t count, Sort_method method, int (*comparator) (const void*, const void*));
 
 
 #endif

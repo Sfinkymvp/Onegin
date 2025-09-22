@@ -34,8 +34,8 @@ int main(int argc, const char** argv)
         if (!process_file(&args.processes[index], args.method)) {
             printf("Error while processing data\n"
                    "Input file name:  %s\nOutput file name: %s\n",
-                   args.processes[index].input_filename,
-                   args.processes[index].output_filename);
+                   args.processes[index].names.input_filename,
+                   args.processes[index].names.output_filename);
             break;
         }
 

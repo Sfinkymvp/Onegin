@@ -46,41 +46,75 @@ void parse_args(Args* args, const char** argv)
            count_el = 0;
 
     for (size_t index = 1; index < args->process_count; index++) {
-        if (strcmp(argv[index], "-i") == 0 && index < args->process_count - 1) {
-            args->processes[count_el].input_filename = argv[++index];
-            input_files_count++;
-
-            if (input_files_count == output_files_count)
-                count_el++;
-
-        } else if (strcmp(argv[index], "-o") == 0 && index < args->process_count - 1) {
-            args->processes[count_el].output_filename = argv[++index];
-            output_files_count++;
-
-            if (input_files_count == output_files_count)
-                count_el++;
+        if (strcmp(argv[index], "-i") == 0) {
+            parse_input_file(args, argv, &index, &count_el,
+                             &input_files_count, &output_files_count);
+            
+        } else if (strcmp(argv[index], "-o") == 0) {
+            parse_output_file(args, argv, &index, &count_el,
+                              &input_files_count, &output_files_count);
 
         } else if (strcmp(argv[index], "--help") == 0) {
             args->show_help = true;
             break;
 
-        } else if (strcmp(argv[index], "--method") == 0 && index < args->process_count - 1) {
-            index++;
-
-            if (strcmp(argv[index], "insertion") == 0)
-                args->method = SORT_INSERTION;
-            else if (strcmp(argv[index], "bubble") == 0)
-                args->method = SORT_BUBBLE;
-            else
-                args->method = SORT_NONE;
+        } else if (strcmp(argv[index], "--method") == 0) {
+            parse_method(args, argv, &index);
         }
     }
 
-    if (input_files_count == output_files_count && 
-        input_files_count != 0 && args->show_help == false)
+    if (is_args_correct(args, input_files_count, output_files_count))
         args->process_count = count_el;
     else
         args->process_count = 0;
+}
+
+
+bool is_args_correct(Args* args, size_t input_files_count, size_t output_files_count)
+{
+    return input_files_count == output_files_count && 
+           input_files_count != 0 && !args->show_help;
+}
+
+
+void parse_input_file(Args* args, const char** argv, size_t* index, size_t* count_el,
+                      size_t* input_files_count, size_t* output_files_count)
+{
+    if (*index < args->process_count - 1) {
+        args->processes[*count_el].names.input_filename = argv[++(*index)];
+        (*input_files_count)++;
+
+        if (*input_files_count == *output_files_count)
+            (*count_el)++;
+    }
+}
+
+
+void parse_output_file(Args* args, const char** argv, size_t* index, size_t* count_el,
+                      size_t* input_files_count, size_t* output_files_count)
+{
+    if (*index < args->process_count - 1) {
+        args->processes[*count_el].names.output_filename = argv[++(*index)];
+        (*output_files_count)++;
+
+        if (*input_files_count == *output_files_count)
+            (*count_el)++;
+    }
+}
+
+
+void parse_method(Args* args, const char** argv, size_t* index)
+{
+    if (*index < args->process_count - 1) {
+        (*index)++;
+
+        if (strcmp(argv[*index], "insertion") == 0)
+            args->method = SORT_INSERTION;
+        else if (strcmp(argv[*index], "bubble") == 0)
+            args->method = SORT_BUBBLE;
+        else
+            args->method = SORT_NONE;
+    }
 }
 
 
@@ -115,37 +149,38 @@ Args get_args(int argc, const char** argv)
 bool process_file(File_process* process, Sort_method method)
 {
     assert(process != NULL);
-    assert(process->input_filename != NULL);
-    assert(process->output_filename != NULL);
+    assert(process->names.input_filename != NULL);
+    assert(process->names.output_filename != NULL);
 
-    process->buffer = initialize_buffer(process->input_filename);
+    process->buffer = initialize_buffer(process->names.input_filename);
 
-    if (process->buffer == NULL) {
+    if (process->buffer == NULL)
         return false;
-    }
 
-    process->line_count = initialize_lines(&process->lines,
-                                            process->buffer);
-   
-    if (process->line_count == 0) {
+    process->line_count = initialize_lines(&process->lines, process->buffer);
+  
+    if (process->line_count == 0)
         return false;
-    }
 
     assert(process->lines != NULL);
 
-    sort_lines(process->lines, process->line_count, method, false);
+    process->buffer_size = strlen(process->buffer);
+    str_replace_char(process->buffer, '\n', '\0');
+
+    sort_lines(process->lines, process->line_count, method, letter_strcmp);
     if (!load_lines_to_file(process->lines,
                             process->line_count,
-                            process->output_filename, "w")) {
+                            process->names.output_filename, "w"))
        return false;
-    }
 
-    sort_lines(process->lines, process->line_count, method, true);
+    sort_lines(process->lines, process->line_count, method, letter_rstrcmp);
     load_lines_to_file(process->lines,
                        process->line_count,
-                       process->output_filename, "a");
+                       process->names.output_filename, "a");
 
-    store_buffer_to_file(process->buffer, process->output_filename, "a");
+    store_buffer_to_file(process->buffer,
+                         process->buffer_size,
+                         process->names.output_filename, "a");
 
     return true;
 }

@@ -1,5 +1,5 @@
-
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 #include "output.h"
@@ -17,10 +17,8 @@ bool load_lines_to_file(const Line* lines, size_t count, const char* output_file
     if (out == NULL)
         return false;
 
-    for (size_t lines_index = 0; lines_index < count; lines_index++)
-        for (size_t index = 0; index < (size_t)lines[lines_index].length; index++) 
-            fprintf(out, "%c", lines[lines_index].data[index]);
-    fprintf(out, "\n");
+    for (size_t index = 0; index < count; index++)
+        fprintf(out, "%s\n", lines[index].data);
 
     if (fclose(out) == EOF)
         return false;
@@ -29,7 +27,7 @@ bool load_lines_to_file(const Line* lines, size_t count, const char* output_file
 }
 
 
-bool store_buffer_to_file(const char* buffer, const char* output_filename, const char* mode)
+bool store_buffer_to_file(const char* buffer, size_t size, const char* output_filename, const char* mode)
 {
     assert(buffer != NULL);
     assert(output_filename != NULL);
@@ -37,10 +35,13 @@ bool store_buffer_to_file(const char* buffer, const char* output_filename, const
 
     FILE* out = fopen(output_filename, mode);
 
+    printf("%zu\n", size);
+
     if (out == NULL)
         return false;
 
-    fprintf(out, "%s", buffer);
+    for (size_t index = 0; index < size; index += strlen(buffer + index) + 1)
+        fprintf(out, "%s\n", buffer + index);
 
     if (fclose(out) == EOF)
         return false;

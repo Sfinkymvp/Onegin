@@ -10,6 +10,14 @@
 size_t get_file_size(const char* input_filename);
 
 
+/// Заменяет все старые символы на новые
+/// @param string Строка
+/// @param old_char Старый символ
+/// @param new_char Новый символ
+/// @return Количество замен
+size_t str_replace_char(char* string, char old_char, char new_char);
+
+
 /// Создание динамического массива, содержащего текст из файла
 /// @param input_filename Имя файла с исходным текстом
 /// @return Указатель на созданный динамический массив (NULL при ошибке создания)

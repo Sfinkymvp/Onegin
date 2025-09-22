@@ -73,48 +73,131 @@ int letter_rstrcmp(const void* str1, const void* str2)
 }
 
 
-void insertion_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*))
+void copy(void* ptr1, void* ptr2, size_t size)
 {
-    assert(lines != NULL);
-    assert(comparator != NULL);
+    assert(ptr1 != NULL);
+    assert(ptr2 != NULL);
 
-    for (size_t index = 1; index < count; index++) {
-        size_t curr_index = index;
+    char* p1 = (char*)ptr1;
+    char* p2 = (char*)ptr2;
 
-        const Line curr_el = lines[curr_index];
+    while (size >= 8) {
+        *(size_t*)p1 = *(size_t*)p2;
+        size -= sizeof(size_t);
+        p1 += sizeof(size_t);
+        p2 += sizeof(size_t);
+    }
 
-        while (curr_index > 0 && comparator(&lines[curr_index - 1], &curr_el) > 0) {
-            lines[curr_index] = lines[curr_index - 1];
-            curr_index--;
-        }
+    while (size >= 4) {
+        *(int*)p1 = *(int*)p2;
+        size -= sizeof(int);
+        p1 += sizeof(int);
+        p2 += sizeof(int);
+    }
 
-        lines[curr_index] = curr_el;
+    while (size >= 2) {
+        *(short*)p1 = *(short*)p2;
+        size -= sizeof(short);
+        p1 += sizeof(short);
+        p2 += sizeof(short);
+    }
+
+    while (size >= 1) {
+        *(char*)p1 = *(char*)p2;
+        size--;
+        p1++;
+        p2++;
     }
 }
 
 
-void swap(Line* line1, Line* line2)
+void swap(void* ptr1, void* ptr2, size_t size)
 {
-    assert(line1 != NULL);
-    assert(line2 != NULL);
+    assert(ptr1 != NULL);
+    assert(ptr2 != NULL);
 
-    Line temp = *line1;
-    *line1 = *line2;
-    *line2 = temp;
+    char* p1 = (char*)ptr1;
+    char* p2 = (char*)ptr2;
+
+    while (size >= 8) {
+        size_t temp = *(size_t*)p1;
+        *(size_t*)p1 = *(size_t*)p2;
+        *(size_t*)p2 = temp;
+        size -= sizeof(size_t);
+        p1 += sizeof(size_t);
+        p2 += sizeof(size_t);
+    }
+
+    while (size >= 4) {
+        int temp = *(int*)p1;
+        *(int*)p1 = *(int*)p2;
+        *(int*)p2 = temp;
+        size -= sizeof(int);
+        p1 += sizeof(int);
+        p2 += sizeof(int);
+    }
+
+    while (size >= 2) {
+       short temp = *(short*)p1;
+        *(short*)p1 = *(short*)p2;
+        *(short*)p2 = temp;
+        size -= sizeof(short);
+        p1 += sizeof(short);
+        p2 += sizeof(short);
+    }
+
+    while (size >= 1) {
+        char temp = *(char*)p1;
+        *(char*)p1 = *(char*)p2;
+        *(char*)p2 = temp;
+        size--;
+        p1++;
+        p2++;
+    }
 }
 
 
-void bubble_sort(Line* lines, size_t count, int (*comparator) (const void*, const void*))
+void insertion_sort(void* ptr, size_t count, size_t size, int (*comparator) (const void*, const void*))
 {
-    assert(lines != NULL);
+    assert(ptr != NULL);
     assert(comparator != NULL);
+
+    char* base = (char*)ptr;
+
+    for (size_t index = 1; index < count; index++) {
+        size_t curr_index = index;
+
+        void* curr_el = calloc(1, size);
+
+        assert(curr_el != NULL);
+
+        copy(curr_el, base + curr_index * size, size);
+
+        while (curr_index > 0 && comparator(base + (curr_index - 1) * size, curr_el) > 0) {
+            copy(base + curr_index * size, base + (curr_index - 1) * size, size);
+            curr_index--;
+        }
+
+        copy(base + curr_index * size, curr_el, size);
+
+        free(curr_el);
+    }
+}
+
+
+void bubble_sort(void* ptr, size_t count, size_t size, int (*comparator) (const void*, const void*))
+{
+    assert(ptr != NULL);
+    assert(comparator != NULL);
+
+    char* base = (char*)ptr;
 
     for (size_t step = count - 1; step > 0; step--) {
         size_t swap_count = 0;
 
         for (size_t index = 0; index < step; index++)
-            if (comparator(lines + index, lines + index + 1) > 0) {
-                swap(lines + index, lines + index + 1);
+            if (comparator(base + index * size, base + (index + 1) * size) > 0) {
+                swap(base + index * size, base + (index + 1) * size, size);
                 swap_count++;
             }
 
@@ -124,17 +207,9 @@ void bubble_sort(Line* lines, size_t count, int (*comparator) (const void*, cons
 }
 
 
-void sort_lines(Line* lines, size_t count, Sort_method method, bool reverse_mode)
+void sort_lines(Line* lines, size_t count, Sort_method method, int (*comparator) (const void*, const void*))
 {
     assert(lines != NULL);
-
-    int (*comparator) (const void*, const void*) = NULL;
-
-    if (reverse_mode == true)
-        comparator = letter_rstrcmp;
-    else
-        comparator = letter_strcmp;
-
     assert(comparator != NULL);
 
     switch (method) {
@@ -144,12 +219,12 @@ void sort_lines(Line* lines, size_t count, Sort_method method, bool reverse_mode
         }
 
         case SORT_INSERTION: {
-            insertion_sort(lines, count, comparator);
+            insertion_sort(lines, count, sizeof(*lines), comparator);
             break;
         }
 
         case SORT_BUBBLE: {
-            bubble_sort(lines, count, comparator);
+            bubble_sort(lines, count, sizeof(*lines), comparator);
             break;
         }
 
