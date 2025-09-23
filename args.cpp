@@ -72,6 +72,8 @@ void parse_args(Args* args, const char** argv)
 
 bool is_args_correct(Args* args, size_t input_files_count, size_t output_files_count)
 {
+    assert(args != NULL);
+
     return input_files_count == output_files_count && 
            input_files_count != 0 && !args->show_help;
 }
@@ -80,6 +82,13 @@ bool is_args_correct(Args* args, size_t input_files_count, size_t output_files_c
 void parse_input_file(Args* args, const char** argv, size_t* index, size_t* count_el,
                       size_t* input_files_count, size_t* output_files_count)
 {
+    assert(args != NULL);
+    assert(argv != NULL);
+    assert(index != NULL);
+    assert(count_el != NULL);
+    assert(input_files_count != NULL);
+    assert(output_files_count != NULL);
+
     if (*index < args->process_count - 1) {
         args->processes[*count_el].names.input_filename = argv[++(*index)];
         (*input_files_count)++;
@@ -93,6 +102,13 @@ void parse_input_file(Args* args, const char** argv, size_t* index, size_t* coun
 void parse_output_file(Args* args, const char** argv, size_t* index, size_t* count_el,
                       size_t* input_files_count, size_t* output_files_count)
 {
+    assert(args != NULL);
+    assert(argv != NULL);
+    assert(index != NULL);
+    assert(count_el != NULL);
+    assert(input_files_count != NULL);
+    assert(output_files_count != NULL);
+
     if (*index < args->process_count - 1) {
         args->processes[*count_el].names.output_filename = argv[++(*index)];
         (*output_files_count)++;
@@ -105,6 +121,10 @@ void parse_output_file(Args* args, const char** argv, size_t* index, size_t* cou
 
 void parse_method(Args* args, const char** argv, size_t* index)
 {
+    assert(args != NULL);
+    assert(argv != NULL);
+    assert(index != NULL);
+
     if (*index < args->process_count - 1) {
         (*index)++;
 

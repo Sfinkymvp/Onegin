@@ -24,13 +24,6 @@ size_t str_replace_char(char* string, char old_char, char new_char);
 char* initialize_buffer(const char* input_filename);
 
 
-/// Изменение размера динамического массива
-/// @param lines Массив из структур
-/// @param new_size новый размер динамического массива
-/// @return Указатель на измененный массив (NULL при ошибке изменения)
-Line* resize_array(Line** lines, size_t new_size);
-
-
 /// Получение количества строк в буфере
 /// @param buffer Массив, содержащий текст из файла
 /// @return Количество строк

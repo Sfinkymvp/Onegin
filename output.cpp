@@ -35,8 +35,6 @@ bool store_buffer_to_file(const char* buffer, size_t size, const char* output_fi
 
     FILE* out = fopen(output_filename, mode);
 
-    printf("%zu\n", size);
-
     if (out == NULL)
         return false;
 

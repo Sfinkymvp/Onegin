@@ -15,7 +15,7 @@ int main(int argc, const char** argv)
 
     Args args = get_args(argc, argv);
 
-    if (args.show_help == true) {
+    if (args.show_help) {
         printf("%s", HELP_MESSAGE);
         return 0;
     }
